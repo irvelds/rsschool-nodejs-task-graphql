@@ -41,8 +41,8 @@ export type IUser = {
     // }[];
 };
 
-
 export interface IUserSubType {
+    userId: string,
     subscriberId: string;
     authorId: string;
 }
@@ -50,4 +50,32 @@ export interface IUserSubType {
 export interface IUserSub extends IUser {
     userSubscribedTo?: IUserSubType[];
     subscribedToUser?: IUserSubType[];
+}
+
+
+export interface IPostInputType {
+    id: string;
+    dto: {
+        title: string;
+        content: string;
+        authorId: string;
+    };
+}
+
+export interface IProfileInputType {
+    id: string;
+    dto: {
+        isMale: boolean;
+        yearOfBirth: number;
+        memberTypeId: string;
+        userId: string;
+    };
+}
+
+export interface IUserInputType {
+    id: string;
+    dto: {
+        name: string;
+        balance: number;
+    };
 }

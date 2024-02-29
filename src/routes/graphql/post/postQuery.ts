@@ -20,8 +20,8 @@ export const PostQueries = {
     args: { id: { type: new GraphQLNonNull(UUIDType) } },
     resolve: async (_parent: unknown, args: IPost, { ctx }: IContext) => {
       const { id } = args;
-      const post = await ctx.post.findFirst({ where: { id } });
-      return post;
+        const post = await ctx.post.findFirst({ where: { id } });
+        return post;
     },
   },
 
