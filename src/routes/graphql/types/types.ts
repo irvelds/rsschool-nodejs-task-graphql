@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+import DataLoader from 'dataloader';
 
 export interface IContext {
     ctx: PrismaClient;
+    loaders: IDataLoaders;
 }
 
 export type IMemberType = {
@@ -79,3 +81,10 @@ export interface IUserInputType {
         balance: number;
     };
 }
+
+type IDataLoader = DataLoader<string, unknown>;
+
+export interface IDataLoaders {
+    memberType: IDataLoader;
+}
+

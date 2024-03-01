@@ -29,7 +29,7 @@ export const UserType = new GraphQLObjectType({
     },
     userSubscribedTo: {
       type: new GraphQLList(UserType),
-      async resolve(parent: IUserSub, _args: {}, { ctx }: IContext) {
+      resolve: async (parent: IUserSub, _args: {}, { ctx }: IContext) => {
         const { id } = parent;
         return await ctx.user.findMany({
           where: {
@@ -40,7 +40,7 @@ export const UserType = new GraphQLObjectType({
     },
     subscribedToUser: {
       type: new GraphQLList(UserType),
-      async resolve(parent: IUserSub, _args: {}, { ctx }: IContext) {
+      resolve: async (parent: IUserSub, _args: {}, { ctx }: IContext) => {
         const { id } = parent;
         return await ctx.user.findMany({
           where: {

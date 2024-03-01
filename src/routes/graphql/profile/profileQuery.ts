@@ -21,12 +21,13 @@ export const ProfileType = new GraphQLObjectType({
         return ctx.user.findFirst({ where: { id: userId } });
       },
     },
+    
     memberType: {
       type: MemberType,
-      resolve: async (parent: IProfile, _args: {}, { ctx }: IContext) => {
+      resolve: async (parent: IProfile, _args: {}, { loaders }: IContext) =>{
         const { memberTypeId } = parent;
-        return ctx.memberType.findFirst({ where: { id: memberTypeId } });
-      },
+        return await loaders.memberType.load(memberTypeId)
+      }
     },
   }),
 });
