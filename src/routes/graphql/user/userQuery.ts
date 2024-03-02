@@ -1,7 +1,7 @@
 
 import { GraphQLObjectType, GraphQLString, GraphQLFloat, GraphQLList, GraphQLNonNull } from 'graphql';
 import { UUIDType } from '../types/uuid.js';
-import { IContext, IUser, IUserSub } from '../types/types.js';
+import { IContext, IUser } from '../types/types.js';
 import { PostType } from '../post/postQuery.js';
 import { ProfileType } from '../profile/profileQuery.js';
 export const UserType = new GraphQLObjectType({
@@ -11,44 +11,40 @@ export const UserType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(UUIDType) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
+
     profile: {
       type: ProfileType,
-      resolve: async (parent: IUser, _args: {}, { ctx }: IContext) => {
+      resolve: async (parent: IUser, _args: {}, { profileLoader }: IContext) => {
         const { id } = parent;
-        const profile = await ctx.profile.findFirst({ where: { userId: id } });
-        return profile;
-      },
+        return await profileLoader.load(id)
+      }
+
     },
+
     posts: {
       type: new GraphQLList(PostType),
-      resolve: async (parent: IUser, _args: {}, { ctx }: IContext) => {
+      resolve: async (parent: IUser, _args: {}, { postLoader }: IContext) => {
         const { id } = parent;
-        const posts = await ctx.post.findMany({ where: { authorId: id } });
-        return posts;
-      },
+        return await postLoader.load(id)
+      }
     },
+
     userSubscribedTo: {
       type: new GraphQLList(UserType),
-      resolve: async (parent: IUserSub, _args: {}, { ctx }: IContext) => {
+      resolve: async (parent: IUser, _args: {}, { userSubToLoader }: IContext) => {
         const { id } = parent;
-        return await ctx.user.findMany({
-          where: {
-            subscribedToUser: { some: { subscriberId: id } },
-          },
-        });
+        return await userSubToLoader.load(id)
       },
     },
+
     subscribedToUser: {
       type: new GraphQLList(UserType),
-      resolve: async (parent: IUserSub, _args: {}, { ctx }: IContext) => {
+      resolve: async (parent: IUser, _args: {}, { subToUserLoader }: IContext) => {
         const { id } = parent;
-        return await ctx.user.findMany({
-          where: {
-            userSubscribedTo: { some: { authorId: id } },
-          },
-        });
+        return await subToUserLoader.load(id)
       },
     },
+
   }),
 });
 
@@ -62,7 +58,6 @@ export const UserQueries = {
       const user = ctx.user.findFirst({ where: { id } });
       return user;
     }
-
   },
 
   users: {

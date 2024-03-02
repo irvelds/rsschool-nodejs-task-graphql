@@ -61,7 +61,7 @@ export const UserMutations = {
             authorId: { type: new GraphQLNonNull(UUIDType) },
         },
         resolve: async (_parent: unknown, args: IUserSubType, { ctx }: IContext) => {
-            const { userId , authorId } = args;
+            const { userId, authorId } = args;
             return await ctx.user.update({
                 where: { id: userId },
                 data: { userSubscribedTo: { create: { authorId } } },

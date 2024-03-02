@@ -1,8 +1,8 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLBoolean, GraphQLNonNull } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLBoolean, GraphQLNonNull } from 'graphql';
 import { UUIDType } from '../types/uuid.js';
 import { IContext, IProfile } from '../types/types.js';
 import { UserType } from '../user/userQuery.js';
-import { MemberType} from '../memberType/memberQuery.js';
+import { MemberType, MemberTypeEnumIdType } from '../memberType/memberQuery.js';
 
 
 export const ProfileType = new GraphQLObjectType({
@@ -13,7 +13,7 @@ export const ProfileType = new GraphQLObjectType({
     isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
     userId: { type: new GraphQLNonNull(UUIDType) },
-    memberTypeId: { type: new GraphQLNonNull(GraphQLString) },
+    memberTypeId: { type: MemberTypeEnumIdType },
     user: {
       type: UserType,
       resolve: async (parent: IProfile, _args: {}, { ctx }: IContext) => {
@@ -21,12 +21,11 @@ export const ProfileType = new GraphQLObjectType({
         return ctx.user.findFirst({ where: { id: userId } });
       },
     },
-    
     memberType: {
       type: MemberType,
-      resolve: async (parent: IProfile, _args: {}, { loaders }: IContext) =>{
+      resolve: async (parent: IProfile, _args: {}, { memberLoader }: IContext) => {
         const { memberTypeId } = parent;
-        return await loaders.memberType.load(memberTypeId)
+        return await memberLoader.load(memberTypeId)
       }
     },
   }),

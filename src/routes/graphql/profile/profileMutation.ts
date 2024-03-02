@@ -3,6 +3,7 @@ import { GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLNonNull, GraphQLInput
 import { UUIDType } from '../types/uuid.js';
 import { ProfileType } from './profileQuery.js';
 import { IContext, IProfileInputType } from '../types/types.js';
+import { MemberTypeEnumIdType } from '../memberType/memberQuery.js';
 
 
 const CreateProfileInputType = new GraphQLInputObjectType({
@@ -12,7 +13,7 @@ const CreateProfileInputType = new GraphQLInputObjectType({
         isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
         yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
         userId: { type: new GraphQLNonNull(UUIDType) },
-        memberTypeId: { type: new GraphQLNonNull(GraphQLString) }
+        memberTypeId: { type: new GraphQLNonNull(MemberTypeEnumIdType) }
     }),
 });
 
@@ -22,10 +23,9 @@ const ChangeProfileInputType = new GraphQLInputObjectType({
         isMale: { type: GraphQLBoolean },
         yearOfBirth: { type: GraphQLInt },
         // userId: { type: UUIDType },
-        memberTypeId: { type: GraphQLString }
+        memberTypeId: { type: MemberTypeEnumIdType }
     }),
 });
-
 
 export const ProfileMutations = {
     createProfile: {

@@ -1,11 +1,14 @@
 import { PrismaClient } from '@prisma/client';
-import DataLoader from 'dataloader';
-
+import { memberLoader, postLoader, profileLoader, subToUserLoader, userSubToLoader } from '../loaders.js';
 export interface IContext {
     ctx: PrismaClient;
-    loaders: IDataLoaders;
-}
+    postLoader: ReturnType<typeof postLoader>;
+    memberLoader: ReturnType<typeof memberLoader>;
+    profileLoader: ReturnType<typeof profileLoader>;
+    subToUserLoader: ReturnType<typeof subToUserLoader>;
+    userSubToLoader: ReturnType<typeof userSubToLoader>;
 
+}
 export type IMemberType = {
     id: string;
     discount: number;
@@ -82,9 +85,4 @@ export interface IUserInputType {
     };
 }
 
-type IDataLoader = DataLoader<string, unknown>;
-
-export interface IDataLoaders {
-    memberType: IDataLoader;
-}
 
